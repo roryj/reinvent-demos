@@ -1,0 +1,60 @@
+{
+    "Comment": "Convert an image to three different type of image formats in parallel.",
+    "StartAt": "Process Image",
+    "States": {
+        "Process Image": {
+            "Branches": [
+                {
+                    "StartAt": "SetupPNGConversion",
+                    "States": {
+                        "PNGConversion": {
+                            "End": true,
+                            "Resource": "arn:aws:lambda:eu-west-1:407834767785:function:image-processor",
+                            "Type": "Task"
+                        },
+                        "SetupPNGConversion": {
+                            "Next": "PNGConversion",
+                            "Result": "png",
+                            "ResultPath": "$.outputExtension",
+                            "Type": "Pass"
+                        }
+                    }
+                },
+                {
+                    "StartAt": "SetupJPGConversion",
+                    "States": {
+                        "JPGConversion": {
+                            "End": true,
+                            "Resource": "arn:aws:lambda:eu-west-1:407834767785:function:image-processor",
+                            "Type": "Task"
+                        },
+                        "SetupJPGConversion": {
+                            "Next": "JPGConversion",
+                            "Result": "jpg",
+                            "ResultPath": "$.outputExtension",
+                            "Type": "Pass"
+                        }
+                    }
+                },
+                {
+                    "StartAt": "SetupBMPConversion",
+                    "States": {
+                        "BMPConversion": {
+                            "End": true,
+                            "Resource": "arn:aws:lambda:eu-west-1:407834767785:function:image-processor",
+                            "Type": "Task"
+                        },
+                        "SetupBMPConversion": {
+                            "Next": "BMPConversion",
+                            "Result": "bmp",
+                            "ResultPath": "$.outputExtension",
+                            "Type": "Pass"
+                        }
+                    }
+                }
+            ],
+            "End": true,
+            "Type": "Parallel"
+        }
+    }
+}
